@@ -1,1 +1,1 @@
-web: scalajvm/target/universal/stage/bin/webnotify  -Dhttp.port=$PORT
+web: scalajvm/target/universal/stage/bin/play-wisielec  -Dhttp.port=$PORT
