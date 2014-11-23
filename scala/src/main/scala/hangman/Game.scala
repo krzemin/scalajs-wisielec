@@ -11,11 +11,11 @@ class Game(word: String, maxMistakes: Int = 5) {
   def move(letter: Char): Unit = {
     state match {
       case InProgress(_) =>
-        moves = moves :+ letter
-        if (word.contains(letter)) {
-          val indicies = word.zipWithIndex.filter(_._1 == letter).map(_._2)
+        moves = moves :+ letter.toUpper
+        if (word.toUpperCase.contains(letter.toUpper)) {
+          val indicies = word.toUpperCase.zipWithIndex.filter(_._1 == letter.toUpper).map(_._2).toSet
           visible = visible.zipWithIndex.map {
-            case (let, idx) => if (indicies.contains(idx)) letter else let
+            case (let, idx) => if (indicies.contains(idx)) letter.toUpper else let
           }.mkString
         } else {
           mistakes = mistakes + 1
@@ -26,7 +26,7 @@ class Game(word: String, maxMistakes: Int = 5) {
 
   def state: GameState = {
     if (mistakes < maxMistakes) {
-      if (visible == word) {
+      if (visible.toUpperCase == word.toUpperCase) {
         Won(moves.size)
       } else {
         InProgress(maxMistakes - mistakes)
