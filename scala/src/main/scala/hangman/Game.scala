@@ -8,7 +8,7 @@ class Game(word: String, maxMistakes: Int = 5) {
   var mistakes: Int = 0
   val alphabet = "AĄBCĆDEĘFGHIJKLŁMNŃOÓPRSTUWXYŹŻ"
 
-  def move(letter: Char): Unit = {
+  def move(letter: Char): Boolean = {
     state match {
       case InProgress(_) =>
         moves = moves :+ letter.toUpper
@@ -17,10 +17,13 @@ class Game(word: String, maxMistakes: Int = 5) {
           visible = visible.zipWithIndex.map {
             case (let, idx) => if (indicies.contains(idx)) letter.toUpper else let
           }.mkString
+          true
         } else {
           mistakes = mistakes + 1
+          false
         }
       case _ =>
+        false
     }
   }
 

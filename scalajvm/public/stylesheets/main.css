@@ -1,0 +1,16 @@
+#game {
+    width: 600px;
+}
+
+#visible-word {
+    font-size: 40px;
+    font-family: monospace;
+}
+
+.letter-button {
+    width: 60px;
+    height: 40px;
+    font-weight: bold;
+    margin: 2px;
+
+}

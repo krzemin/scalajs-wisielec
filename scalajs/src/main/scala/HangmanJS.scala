@@ -1,52 +1,63 @@
 import scala.scalajs.js.JSApp
 import org.scalajs.dom
-import dom.document
+import org.scalajs.dom.{HTMLButtonElement, document}
 
 import scala.scalajs.js.annotation.JSExport
 import scalatags.JsDom.all._
 
+import hangman.Game
+
 object HangmanJS extends JSApp {
 
-  val game = new hangman.Game("biedronka")
+  val game: Game = new Game("biedronka")
+
+  def visibleText: String = game.visible.map(_.toUpper).mkString(" ")
+
+  val visiblePar = p(id := "visible-word")(visibleText).render
+  val mistakesPar = p(s"Skuch: ${game.mistakes}").render
 
   @JSExport
   def move(letter: Char): Unit = {
-    println(letter)
     game.move(letter.toLower)
-    updateView()
+    visiblePar.textContent = visibleText
+    mistakesPar.textContent = s"Skuch: ${game.mistakes}"
   }
 
-  def updateView(): Unit = {
-    val layout = div(
-      h1("Wisielec"),
-      p(s"Skuch: ${game.mistakes}"),
-      p(style := "font-size: 32px")(game.visible.map(_.toUpper).mkString(" ")),
-      br,
-      game.alphabet.grouped(8).toList.map { lettersPortion =>
-        ul(style := "list-style-type: none; margin: 0; padding: 0")(
-          lettersPortion.map { letter =>
-            li(style := "display: inline")(
-              button(
-                `type` := "button",
-                style := "width: 2em",
-                onclick := s"""HangmanJS().move('${letter.toString}')""")(
-                  letter.toString
-                )
-            )
-          }
-        )
-      }
-    )
+  val btnsMap: Map[Char, HTMLButtonElement] = game.alphabet.map { letter =>
+    val btn = button(
+      `type` := "button",
+      `class` := "btn btn-primary letter-button"
+    )(letter.toString).render
 
-    val gameDiv = document.getElementById("game")
+    btn.onclick = (e: dom.MouseEvent) => {
+      btn.classList.add("disabled")
+      move(letter)
+    }
 
-    gameDiv.appendChild(layout.render)
-  }
+    letter -> btn
+  }.toMap
 
+  val alphabetView =
+    game.alphabet.grouped(8).toList.map { lettersPortion =>
+      ul(style := "list-style-type: none; margin: 0; padding: 0")(
+        lettersPortion.map { letter =>
+          li(style := "display: inline")(btnsMap(letter))
+        }
+      )
+    }
+
+  val layout = div(
+    h1("Wisielec"),
+    mistakesPar,
+    visiblePar,
+    br,
+    alphabetView
+  )
 
   def main(): Unit = {
-
-    updateView()
+    val gameDiv = document.getElementById("game")
+    gameDiv.innerHTML = ""
+    gameDiv.appendChild(layout.render)
   }
 
 }
