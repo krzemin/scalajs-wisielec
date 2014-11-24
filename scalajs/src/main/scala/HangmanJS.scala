@@ -5,7 +5,7 @@ import org.scalajs.dom.{HTMLButtonElement, document}
 import scala.scalajs.js.annotation.JSExport
 import scalatags.JsDom.all._
 
-import hangman.Game
+import hangman._
 
 object HangmanJS extends JSApp {
 
@@ -21,6 +21,17 @@ object HangmanJS extends JSApp {
     game.move(letter.toLower)
     visiblePar.textContent = visibleText
     mistakesPar.textContent = s"Skuch: ${game.mistakes}"
+
+    game.state match {
+      case Won(tries) =>
+        dom.alert(s"Hasło zgadnięte po $tries próbach!")
+        dom.location.reload()
+      case Lost =>
+        dom.alert(s"Nie udało się zgadnąć hasła!")
+        dom.location.reload()
+      case _ =>
+    }
+
   }
 
   val btnsMap: Map[Char, HTMLButtonElement] = game.alphabet.map { letter =>
@@ -30,8 +41,10 @@ object HangmanJS extends JSApp {
     )(letter.toString).render
 
     btn.onclick = (e: dom.MouseEvent) => {
-      btn.classList.add("disabled")
-      move(letter)
+      if(game.state.isInstanceOf[InProgress]) {
+        btn.classList.add("disabled")
+        move(letter)
+      }
     }
 
     letter -> btn
