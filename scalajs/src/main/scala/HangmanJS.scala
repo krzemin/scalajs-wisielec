@@ -82,7 +82,7 @@ object HangmanJS extends JSApp {
     Ajax.get("/word").onComplete {
       case Success(resp) =>
         val word = resp.responseText
-        val game = new Game(word)
+        val game = new Game(word, 20)
         new HangmanUI(game)
       case Failure(why) =>
         dom.alert("Error in determining a word. Please refresh your browser to try again.")
