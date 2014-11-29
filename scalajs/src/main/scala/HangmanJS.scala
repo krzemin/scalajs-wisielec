@@ -1,15 +1,17 @@
 import scala.scalajs.js.JSApp
 import org.scalajs.dom
+import dom.extensions._
 import org.scalajs.dom.{HTMLButtonElement, document}
 
 import scala.scalajs.js.annotation.JSExport
+import scala.util.{Failure, Success}
 import scalatags.JsDom.all._
+
+import scalajs.concurrent.JSExecutionContext.Implicits.runNow
 
 import hangman._
 
-object HangmanJS extends JSApp {
-
-  val game: Game = new Game("biedronka")
+class HangmanUI(game: Game) {
 
   def visibleText: String = game.visible.map(_.toUpper).mkString(" ")
 
@@ -67,10 +69,24 @@ object HangmanJS extends JSApp {
     alphabetView
   )
 
+
+  val gameDiv = document.getElementById("game")
+  gameDiv.innerHTML = ""
+  gameDiv.appendChild(layout.render)
+}
+
+
+object HangmanJS extends JSApp {
+
   def main(): Unit = {
-    val gameDiv = document.getElementById("game")
-    gameDiv.innerHTML = ""
-    gameDiv.appendChild(layout.render)
+    Ajax.get("/word").onComplete {
+      case Success(resp) =>
+        val word = resp.responseText
+        val game = new Game(word)
+        new HangmanUI(game)
+      case Failure(why) =>
+        dom.alert("Error in determining a word. Please refresh your browser to try again.")
+    }
   }
 
 }

@@ -3,11 +3,12 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
+GET        /                     controllers.Application.index
+GET        /word                 controllers.Application.word
 
 # Scala source map files
-GET     /scala/*path                controllers.SourceMaps.scalaFile(path)
-GET     /scalajs/*path              controllers.SourceMaps.scalaFile(path)
+GET        /scala/*path          controllers.SourceMaps.scalaFile(path)
+GET        /scalajs/*path        controllers.SourceMaps.scalaFile(path)
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET        /assets/*file         controllers.Assets.at(path="/public", file)
