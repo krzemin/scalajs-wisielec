@@ -1,3 +1,5 @@
+import play.PlayImport
+import play.PlayImport.PlayKeys$
 import sbt._
 import Keys._
 import play.Play._
@@ -5,6 +7,7 @@ import scala.scalajs.sbtplugin.ScalaJSPlugin._
 import ScalaJSKeys._
 import com.typesafe.sbt.packager.universal.UniversalKeys
 import com.typesafe.sbteclipse.core.EclipsePlugin.EclipseKeys
+import PlayImport._
 
 object ApplicationBuild extends Build with UniversalKeys {
 
@@ -97,6 +100,7 @@ object Dependencies {
   val shared = Def.setting(Seq())
 
   val scalajvm = Def.setting(shared.value ++ Seq(
+    ws,
     "org.webjars" % "jquery" % "1.11.1"
   ))
 
