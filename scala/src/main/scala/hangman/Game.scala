@@ -6,7 +6,7 @@ class Game(word: String, maxMistakes: Int = 5) {
   var moves: Vector[Char] = Vector.empty
   var visible: String = "_" * word.size
   var mistakes: Int = 0
-  val alphabet = "AĄBCĆDEĘFGHIJKLŁMNŃOÓPRSTUWXYŹŻ"
+  val alphabet = "AĄBCĆDEĘFGHIJKLŁMNŃOÓPRSTUWXYZŹŻ"
 
   def move(letter: Char): Boolean = {
     state match {
